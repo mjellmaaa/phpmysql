@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 $user="root";
 $pass="";
 $server="localhost";
@@ -18,3 +20,4 @@ try {
 
 
  ?>
+ 
