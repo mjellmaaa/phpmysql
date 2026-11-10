@@ -1,0 +1,6 @@
+1 addmovies.php fotoja nuk u ngarkojke se kodi shkrujke $_POST po fotot vijne $_FILES tash fotoja ruhet ne folderin movie_images, kshdo mund te shtonte filma tash munet veq admini i kyqur, gabimet jepnin faqe bosh ose komplet blank tash userit i paraqitet ni mesazh gabimi
+2.register.php se ka check kurr nese dy passowrds jane te njejta, e kom shtu pre-hash password .
+3. loginlogic ka shfaq errora komplet blank,
+4. logout.php e ka thirr veq session_destroy() pa e fshi memorien ose cookies
+5.home.php nuk e ka pas stabile authentication gate edhe u kon e pa arritshme admin check
+6.index.php e ka pas ni syntax error ne rreshtin 1

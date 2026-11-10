@@ -1,84 +1,69 @@
 <?php 
-	/*Creating a session  based on a session identifier, passed via a GET or POST request.
-  We will include config.php for connection with database.
-  We will get the datas from login.php file and check if any of those datas is incorrect or doesn't exist
-   when Sign in button is clicked in login.php file
-  */
-	session_start();
+/**
+ * User Login Authentication Logic
+ * Project: Movie Management System (MMS)
+ * 
+ * Verifies username and password, regenerates session ID to prevent session fixation,
+ * stores user credentials in the session, and routes users based on their role.
+ */
 
-	include_once('config.php');
+// Include database configuration (session is already safely started inside config.php)
+require_once('config.php');
 
-	if(isset($_POST['submit']))
-	{
-		//We will collect username from form data after submitting an HTML form with method="post".
-		$username = $_POST['username'];
+if (isset($_POST['submit'])) {
 
-		//We will collect password from form data after submitting an HTML form with method="post".
-		$password = $_POST['password'];
+    // Retrieve and trim inputs
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-		//Check if any of username and password variables is empty
-		if (empty($username) || empty($password)) {
+    // 1. Check if either field is empty
+    if (empty($username) || empty($password)) {
+        header("Location: login.php?error=empty_fields");
+        exit;
+    }
 
-			//If true, echo this message
-			echo "Please fill in all fields
-			";
+    try {
+        // 2. Query user by username using a prepared statement to prevent SQL injection
+        $sql = "SELECT id, emri, username, email, password, is_admin FROM users WHERE username = :username LIMIT 1";
+        $selectUser = $conn->prepare($sql);
+        $selectUser->bindParam(":username", $username);
+        $selectUser->execute();
 
-		}
-		else{
+        $data = $selectUser->fetch();
 
-			//If false, we will create a query to select id,emri,username,email,password,is_admin from users table based on each username
-			$sql = "SELECT id, emri, username, email, password, is_admin FROM users WHERE username=:username";
+        // 3. Verify user exists and check if the password hash matches
+        if ($data && password_verify($password, $data['password'])) {
+            
+            // Regenerate session ID to prevent Session Fixation attacks
+            session_regenerate_id(true);
 
-			//We use prepared statement as a feature used to execute the same sql statement repeatedly with high efficiency
-			$selectUser = $conn->prepare($sql);
+            // Store user details in session
+            $_SESSION['id']       = $data['id'];
+            $_SESSION['username'] = $data['username'];
+            $_SESSION['email']    = $data['email'];
+            $_SESSION['emri']     = $data['emri'];
+            $_SESSION['is_admin'] = (int)$data['is_admin'];
 
-			//bindParam binds a parameter to the specified variable name, so we bind :username to $username variable
+            // 4. Role-Based Routing: Admins go to dashboard.php, regular users go to home.php
+            if ((int)$data['is_admin'] === 1) {
+                header('Location: dashboard.php');
+            } else {
+                header('Location: home.php');
+            }
+            exit;
 
-			$selectUser->bindParam(":username", $username);
+        } else {
+            // Invalid username or password (generic message prevents account enumeration)
+            header("Location: login.php?error=invalid_credentials");
+            exit;
+        }
 
-			/* At a later time, the application binds the values to the parameters, and the database executes the statement.
-			 The application may execute the statement as many times as it wants with different values */
+    } catch (PDOException $e) {
+        die("Authentication error: " . htmlspecialchars($e->getMessage()));
+    }
 
-			$selectUser->execute();
-
-			/*The fetch() method allows you to fetch a row from a result set associated with a PDOStatement object. Internally,
-			 the fetch() method fetches a single row from a result set and moves the internal pointer to the next row in the result set.*/
-
-			$data = $selectUser->fetch();
-
-			//We will check if $data value(which in this case would be username) does not exist:
-			if ($data == false) {
-				
-
-				//If the condition is true, then we will echo this message
-				echo "The user does not exist
-				";
-			}else{
-
-					//If condition is not true, we will check if password in database matches the password that we wrote 
-				if (password_verify($password, $data['password'])) {
-					//If this condition is true, we will store $data values to $_SESSION variables
-					$_SESSION['id'] = $data['id'];
-					$_SESSION['username'] = $data['username'];
-					$_SESSION['email'] = $data['email'];
-					$_SESSION['emri'] = $data['emri'];
-					$_SESSION['is_admin'] = $data['is_admin'];
-
-					//And head to dashboard.php
-					header('Location: dashboard.php');
-				}
-				else{
-					//If the second condition is not true, then we will echo this message:
-					echo "The password is not valid
-					";
-				}
-
-			}
-
-		}
-
-
-	}
-
-
- ?>
+} else {
+    // If accessed directly without submitting the form, redirect to login page
+    header("Location: login.php");
+    exit;
+}

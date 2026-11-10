@@ -1,142 +1,143 @@
 <?php 
- /*
-  We will include config.php for connection with database.
-  We will fetch all datas from movies in database and show them.
-  */
-    
-    // Include the database connection file.
-    include_once('config.php');
+/**
+ * Movies Home & Showcase Page
+ * Project: Movie Management System (MMS)
+ * 
+ * Protects page with authentication, loads all active movies,
+ * displays user greeting, navigation bar with Logout, and admin Edit buttons.
+ */
 
-    // Start the session so we can check user access.
-    session_start();
+require_once('config.php');
 
-    // Select all movies from the database.
-    $sql = "SELECT * FROM movies";
+// 1. Authentication Gate: Redirect guests to login page
+if (!isset($_SESSION['id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+try {
+    // 2. Fetch all movies ordered by latest ID
+    $sql = "SELECT * FROM movies ORDER BY id DESC";
     $selectMovies = $conn->prepare($sql);
     $selectMovies->execute();
-
-    // Fetch all movie data.
     $movies_data = $selectMovies->fetchAll();
+} catch (PDOException $e) {
+    die("Error fetching movies: " . htmlspecialchars($e->getMessage()));
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies Home - MMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .movie-card img {
+            object-fit: cover;
+            width: 100%;
+            height: 340px;
+            background-color: #e9ecef;
+        }
+        .hero-banner {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            color: white;
+            padding: 50px 0;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body class="bg-light">
 
-    // Check if there are any movies.
-    if (empty($movies_data)) {
-        // If no movies are found, we can just leave the page empty.
-    }
- ?>
-
- <!DOCTYPE html>
- <html>
- <head>
-    <title>Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.88.1">
-    <link rel="apple-touch-icon" href="/docs/5.1/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
-    <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
-    <link rel="manifest" href="/docs/5.1/assets/img/favicons/manifest.json">
-    <link rel="mask-icon" href="/docs/5.1/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
-    <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon.ico">
-    <meta name="theme-color" content="#7952b3">
- </head>
- <body>
-
-    <header>
-      <div class="collapse bg-dark" id="navbarHeader">
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container">
-          <div class="row">
-            <div class="col-sm-8 col-md-7 py-4">
-              <h4 class="text-white">About</h4>
-              <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits.</p>
-            </div>
-            <div class="col-sm-4 offset-md-1 py-4">
-              <h4 class="text-white">Contact</h4>
-              <ul class="list-unstyled">
-                <li><a href="#" class="text-white">Follow on Twitter</a></li>
-                <li><a href="#" class="text-white">Like on Facebook</a></li>
-                <li><a href="#" class="text-white">Email me</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+            <a class="navbar-brand fw-bold text-warning" href="home.php">🎬 Movie Management System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-      <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="home.php">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="bookings.php">My Bookings</a></li>
+                    <!-- Show Dashboard link if user is Admin -->
+                    <?php if (!empty($_SESSION['is_admin']) && ($_SESSION['is_admin'] == 1 || $_SESSION['is_admin'] === 'true')): ?>
+                        <li class="nav-item"><a class="nav-link text-warning fw-semibold" href="dashboard.php">Admin Dashboard</a></li>
+                    <?php endif; ?>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-light small">
+                        Logged in as: <strong><?= htmlspecialchars($_SESSION['emri'] ?? $_SESSION['username']) ?></strong>
+                    </span>
+                    <a href="logout.php" class="btn btn-outline-danger btn-sm">Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-banner text-center">
         <div class="container">
-          <a href="#" class="navbar-brand d-flex align-items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            <strong>Album</strong>
-          </a>
-
-          <!--
-            We keep the nav button but redirect to the dashboard page.
-          -->
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-            <a href="dashboard.php"><span class="navbar-toggler-icon"></span></a>
-          </button>
+            <h1 class="fw-bold">Now Showing at MMS Cinema</h1>
+            <p class="text-secondary mb-0">Browse current movies, check ratings, and reserve your tickets online.</p>
         </div>
-      </div>
-    </header>
- 
-    <section class="py-5 text-center container">
-      <div class="row py-lg-5">
-        <div class="col-lg-6 col-md-8 mx-auto">
-          <h1 class="fw-light">Album example</h1>
-          <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc.</p>
-          <p>
-            <a href="#" class="btn btn-primary my-2">Main call to action</a>
-            <a href="#" class="btn btn-secondary my-2">Secondary action</a>
-          </p>
-        </div>
-      </div>
     </section>
 
-    <div class="album py-5 bg-light">
-      <div class="container">
+    <!-- Movies Catalog Grid -->
+    <main class="container mb-5">
+        <?php if (empty($movies_data)): ?>
+            <div class="alert alert-info text-center py-5">
+                <h4>No movies available right now.</h4>
+                <p class="mb-0">Please check back later or contact an administrator to add new releases.</p>
+            </div>
+        <?php else: ?>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                <?php foreach ($movies_data as $movie): ?>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm movie-card border-0">
+                            <!-- Safe poster display with fallback placeholder -->
+                            <?php 
+                                $imagePath = !empty($movie['movie_image']) ? 'movie_images/' . $movie['movie_image'] : 'movie_images/default.jpg';
+                            ?>
+                            <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($movie['movie_name'] ?? 'Movie Poster') ?>" onerror="this.src='https://placehold.co/400x550/222/fff?text=No+Poster'">
 
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                            <div class="card-body d-flex flex-col flex-column">
+                                <h5 class="card-title fw-bold text-dark mb-1">
+                                    <?= htmlspecialchars($movie['movie_name'] ?? '') ?>
+                                </h5>
+                                
+                                <p class="card-text text-muted small flex-grow-1">
+                                    <?= htmlspecialchars(substr($movie['movie_desc'] ?? '', 0, 110)) ?>...
+                                </p>
 
-            <?php foreach ($movies_data as $movie_data) { ?>
-                <div class="col">
-                  <div class="card shadow-sm">
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                    <div class="btn-group">
+                                        <!-- View / Book Details button -->
+                                        <a href="details.php?id=<?= (int)$movie['id'] ?>" class="btn btn-sm btn-primary">
+                                            View & Book
+                                        </a>
 
-                    <!--
-                      Show the movie image.
-                    -->
-                    <img src="movie_images/<?php echo htmlspecialchars($movie_data['movie_image']); ?>" height="350">
+                                        <!-- Edit button: correctly checks if is_admin is 1 or 'true' -->
+                                        <?php if (!empty($_SESSION['is_admin']) && ($_SESSION['is_admin'] == 1 || $_SESSION['is_admin'] === 'true')): ?>
+                                            <a href="edit.php?id=<?= (int)$movie['id'] ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                        <?php endif; ?>
+                                    </div>
 
-                    <div class="card-body">
-                      <h4><?php echo htmlspecialchars($movie_data['movie_name']); ?></h4>
-                      <p class="card-text"><?php echo htmlspecialchars($movie_data['movie_desc']); ?></p>
-
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                          <!--
-                            View button is for everyone.
-                          -->
-                          <a href="details.php?id=<?php echo $movie_data['id']; ?>" class="btn btn-sm btn-outline-secondary">View</a>
-
-                          <!--
-                            Edit button should only be visible to admin users.
-                          -->
-                          <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === 'true') { ?>
-                              <a href="edit.php?id=<?php echo $movie_data['id']; ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
-                          <?php } ?>
+                                    <div class="text-end">
+                                        <span class="badge bg-warning text-dark">★ <?= htmlspecialchars($movie['movie_rating'] ?? 'N/A') ?></span>
+                                        <span class="badge bg-secondary"><?= htmlspecialchars($movie['movie_quality'] ?? 'HD') ?></span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
-                        <small class="text-muted">Rating: <?php echo htmlspecialchars($movie_data['movie_rating']); ?></small>
-                        <small class="text-muted"><?php echo htmlspecialchars($movie_data['movie_quality']); ?></small>
-                      </div>
                     </div>
-                  </div>
-                </div>
-            <?php } ?>
-        
-        </div>
-      </div>
-    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </main>
 
- </body>
- </html>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
