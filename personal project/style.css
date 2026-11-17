@@ -1,0 +1,283 @@
+/* COLORS: written once, used everywhere with var() */
+:root {
+  --bg: #101513;
+  --bg2: #151D19;
+  --card: #1B2420;
+  --gold: #D4A85D;
+  --text: #F5F2EA;
+  --soft: #AAB4AC;
+  --border: #303B34;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }   /* smooth scrolling for #links */
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", Arial, sans-serif;
+  line-height: 1.6;
+}
+
+h1, h2, h3 { font-family: "Playfair Display", Georgia, serif; }
+a { color: inherit; text-decoration: none; }
+
+/* BUTTONS */
+.btn {
+  display: inline-block;
+  padding: 12px 26px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 15px;
+  transition: transform 0.3s, background 0.3s;
+}
+.btn:hover { transform: translateY(-3px); }
+.btn-gold { background: var(--gold); color: var(--bg); }
+.btn-glass { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); margin-left: 10px; }
+.btn-outline { border-color: var(--gold); color: var(--gold); padding: 8px 18px; margin-top: 14px; }
+.btn-outline:hover { background: var(--gold); color: var(--bg); }
+
+/* NAVBAR: sits on top of the hero with a slightly transparent dark background */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; width: 100%;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 60px;
+  background: rgba(16,21,19,0.75);
+  backdrop-filter: blur(8px);
+}
+.logo { font-family: "Playfair Display", serif; font-size: 24px; font-weight: 700; }
+.logo span { color: var(--gold); }
+.navbar nav { display: flex; align-items: center; gap: 28px; }
+.navbar nav a:not(.btn) { color: var(--soft); transition: color 0.3s; }
+.navbar nav a:not(.btn):hover { color: var(--gold); }
+.navbar .btn { padding: 8px 20px; }
+
+/* HERO: dark gradient over the photo keeps the text readable */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  background:
+    linear-gradient(90deg, rgba(16,21,19,0.9) 20%, rgba(16,21,19,0.2)),
+    url("destinationimages/hero.jpg") center/cover;
+}
+.hero-content { max-width: 620px; }
+.subtitle { color: var(--gold); letter-spacing: 3px; text-transform: uppercase; font-size: 13px; margin-bottom: 18px; }
+.hero h1 { font-size: 84px; line-height: 1.05; margin-bottom: 20px; }
+.hero h1 span { color: var(--gold); }
+.hero-text { color: var(--soft); font-size: 19px; margin-bottom: 32px; }
+
+/* SEARCH: pulled up so it overlaps the bottom of the hero */
+.search {
+  display: flex;
+  gap: 12px;
+  max-width: 1000px;
+  margin: -45px auto 0;
+  padding: 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  position: relative;
+  z-index: 5;
+}
+.search input, .search select {
+  flex: 1;
+  padding: 12px 14px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+}
+.search input { flex: 2; }
+.search input:focus, .search select:focus { outline: none; border-color: var(--gold); }
+
+/* SECTIONS */
+.section { padding: 100px 60px; max-width: 1300px; margin: 0 auto; }
+.alt { max-width: none; background: var(--bg2); }
+.alt > * { max-width: 1180px; margin-left: auto; margin-right: auto; }
+.section h2 { font-size: 40px; text-align: center; }
+.section-sub { color: var(--soft); text-align: center; margin: 8px 0 50px; }
+
+/* DESTINATION CARDS: grid with 3 columns */
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.card:hover { transform: translateY(-8px); border-color: var(--gold); }
+.card img { width: 100%; height: 240px; object-fit: cover; display: block; }
+.card-body { padding: 22px; }
+.card-body p { color: var(--soft); font-size: 15px; }
+.card-body .place { color: var(--gold); margin-bottom: 8px; }
+.card h3 { font-size: 24px; }
+.tag {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--gold);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2px 12px;
+  margin-bottom: 10px;
+}
+
+/* CATEGORY CARDS */
+.categories { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.cat {
+  height: 190px;
+  display: flex;
+  align-items: flex-end;
+  padding: 20px;
+  border-radius: 16px;
+  font-family: "Playfair Display", serif;
+  font-size: 24px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 -90px 60px -30px rgba(16,21,19,0.95);
+  transition: transform 0.3s;
+}
+.cat:hover { transform: scale(1.03); color: var(--gold); }
+
+/* WHY KOSOVO */
+.why { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 50px; }
+.why div { border-top: 2px solid var(--gold); padding-top: 18px; }
+.why h3 { font-size: 21px; margin-bottom: 8px; }
+.why p { color: var(--soft); font-size: 15px; }
+
+/* CALL TO ACTION */
+.cta {
+  text-align: center;
+  padding: 110px 30px;
+  background: linear-gradient(rgba(16,21,19,0.8), rgba(16,21,19,0.9)), url("destinationimages/rugova.jpg") center/cover;
+}
+.cta h2 { font-size: 44px; }
+.cta p { color: var(--soft); margin: 12px 0 28px; }
+
+/* FOOTER */
+.footer {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 40px;
+  padding: 60px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+}
+.footer p, .footer a { color: var(--soft); display: block; margin-top: 8px; font-size: 14px; }
+.footer a:hover { color: var(--gold); }
+.footer h4 { color: var(--gold); }
+.footer .logo { color: var(--text); display: block; }
+.copy { grid-column: 1 / -1; text-align: center; border-top: 1px solid var(--border); padding-top: 24px; }
+
+/* RESPONSIVE: tablets */
+@media (max-width: 1000px) {
+  .cards, .categories { grid-template-columns: repeat(2, 1fr); }
+  .why { grid-template-columns: repeat(2, 1fr); }
+  .footer { grid-template-columns: 1fr 1fr; }
+}
+
+/* RESPONSIVE: phones */
+@media (max-width: 650px) {
+  .navbar { padding: 12px 20px; flex-direction: column; gap: 8px; }
+  .navbar nav { gap: 14px; flex-wrap: wrap; justify-content: center; font-size: 14px; }
+  .hero { padding: 120px 20px 80px; }
+  .hero h1 { font-size: 52px; }
+  .btn-glass { margin: 12px 0 0; }
+  .search { flex-direction: column; margin: -30px 20px 0; }
+  .section { padding: 70px 20px; }
+  .cards, .categories, .why, .footer { grid-template-columns: 1fr; }
+}
+
+/* ===== DESTINATIONS PAGE ===== */
+.page-head {
+  text-align: center;
+  padding: 150px 20px 40px;
+  background: linear-gradient(180deg, var(--bg2), var(--bg));
+}
+.page-head h1 { font-size: 52px; }
+.page-head p { color: var(--soft); margin-top: 10px; }
+
+/* Filter bar: same idea as the homepage search, with 5 fields */
+.filters {
+  display: flex;
+  flex-wrap: wrap;            /* fields move to a new row when space runs out */
+  gap: 12px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 60px;
+}
+.filters input, .filters select {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px 14px;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+}
+.filters input { flex: 2; }
+.filters input:focus, .filters select:focus { outline: none; border-color: var(--gold); }
+.list { padding-top: 40px; }
+
+/* ===== LOGIN AND REGISTER ===== */
+.auth-page {
+  background:
+    linear-gradient(rgba(16,21,19,0.75), rgba(16,21,19,0.9)),
+    url("destinationimages/hero.jpg") center/cover fixed;
+}
+.auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+.auth-box {
+  width: 420px;
+  padding: 45px;
+  text-align: center;
+  background: rgba(27,36,32,0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+.auth-box h2 { font-size: 34px; margin: 22px 0 6px; }
+.auth-box p { color: var(--soft); font-size: 15px; margin-bottom: 24px; }
+.auth-box form { display: flex; flex-direction: column; gap: 12px; }
+.auth-box input {
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.auth-box input:focus { outline: none; border-color: var(--gold); }
+.auth-box input[type="submit"] {
+  background: var(--gold);
+  color: var(--bg);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.auth-box input[type="submit"]:hover { transform: translateY(-2px); }
+.auth-box .auth-link { margin: 20px 0 0; font-size: 14px; }
+.auth-link a { color: var(--gold); }
+
+@media (max-width: 650px) {
+  .page-head h1 { font-size: 38px; }
+  .filters { padding: 18px 20px; }
+  .auth-box { padding: 30px 22px; }
+}

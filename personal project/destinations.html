@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destinations | ExploreKosovo</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <a href="index.html" class="logo">&#9650; Explore<span>Kosovo</span></a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="destinations.html">Destinations</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+      <a href="register.html" class="btn btn-gold">Register</a>
+    </nav>
+  </header>
+
+  <!-- PAGE HEADING -->
+  <section class="page-head">
+    <h1>Discover Destinations</h1>
+    <p>Browse mountains, waterfalls, old towns and hidden gems across Kosovo.</p>
+  </section>
+
+  <!-- SEARCH AND FILTERS (later PHP will read these values) -->
+  <form class="filters" action="destinations.html" method="get">
+    <input type="text" name="q" placeholder="Search by name...">
+    <select name="city">
+      <option value="">All cities</option>
+      <option>Peja</option><option>Prizren</option><option>Shtërpcë</option>
+      <option>Malisheva</option><option>Lipjan</option><option>Prishtina</option>
+    </select>
+    <select name="category">
+      <option value="">All categories</option>
+      <option>Mountains</option><option>Waterfalls</option><option>Historical Places</option>
+      <option>Cities</option><option>Nature</option><option>Adventure</option>
+    </select>
+    <select name="rating">
+      <option value="">Any rating</option>
+      <option value="4">4 stars and up</option>
+      <option value="3">3 stars and up</option>
+    </select>
+    <select name="sort">
+      <option value="name">Sort by name</option>
+      <option value="rating">Highest rated</option>
+      <option value="newest">Newest</option>
+    </select>
+    <button type="submit" class="btn btn-gold">Filter</button>
+  </form>
+
+  <!-- DESTINATION GRID -->
+  <section class="section list">
+    <div class="cards">
+
+      <article class="card">
+        <img src="destinationimages/rugova.jpg" alt="Rugova">
+        <div class="card-body">
+          <span class="tag">Mountains</span>
+          <h3>Rugova</h3>
+          <p class="place">Peja &nbsp;&#9733; 4.9</p>
+          <p>Deep canyons, alpine peaks and some of the best hiking in the Balkans.</p>
+          <a href="details.html" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <img src="destinationimages/prizren.jpg" alt="Prizren">
+        <div class="card-body">
+          <span class="tag">Historical Places</span>
+          <h3>Prizren</h3>
+          <p class="place">Prizren &nbsp;&#9733; 4.8</p>
+          <p>Ottoman bridges, the fortress above the town and the Lumbardhi river.</p>
+          <a href="details.html" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <img src="destinationimages/brezovica.jpg" alt="Brezovica">
+        <div class="card-body">
+          <span class="tag">Adventure</span>
+          <h3>Brezovica</h3>
+          <p class="place">Shtërpcë &nbsp;&#9733; 4.6</p>
+          <p>Skiing in winter, mountain trails and fresh air in the Sharr Mountains.</p>
+          <a href="details.html" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <img src="destinationimages/mirusha.jpg" alt="Mirusha Waterfalls">
+        <div class="card-body">
+          <span class="tag">Waterfalls</span>
+          <h3>Mirusha Waterfalls</h3>
+          <p class="place">Malisheva &nbsp;&#9733; 4.7</p>
+          <p>A chain of waterfalls and turquoise pools carved into the canyon.</p>
+          <a href="details.html" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <img src="destinationimages/gadime.jpg" alt="Gadime Cave">
+        <div class="card-body">
+          <span class="tag">Nature</span>
+          <h3>Gadime Cave</h3>
+          <p class="place">Lipjan &nbsp;&#9733; 4.5</p>
+          <p>An underground world of stalactites and stalagmites near Prishtina.</p>
+          <a href="details.html" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <img src="destinationimages/germia.jpg" alt="Germia Park">
+        <div class="card-body">
+          <span class="tag">Nature</span>
+          <h3>Germia Park</h3>
+          <p class="place">Prishtina &nbsp;&#9733; 4.4</p>
+          <p>Forest walks, picnic areas and a pool, only minutes from the capital.</p>
+          <a href="details.html" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p class="copy">&copy; 2026 ExploreKosovo. Discover the beauty. Experience Kosovo.</p>
+  </footer>
+
+</body>
+</html>
