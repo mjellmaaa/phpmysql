@@ -342,3 +342,12 @@ button.btn-outline:hover { background: var(--gold); color: var(--bg); }
 /* ===== SEARCH RESULTS INFO ===== */
 .results { text-align: center; color: var(--soft); margin: 10px 0 0; font-size: 14px; }
 .results a { color: var(--gold); }
+
+/* ===== MOBILE MENU ===== */
+.menu-toggle { display: none; background: none; border: 1px solid var(--border); color: var(--text); font-size: 24px; padding: 2px 12px; border-radius: 8px; cursor: pointer; }
+@media (max-width: 650px) {
+  .navbar { flex-direction: row; flex-wrap: wrap; }
+  .menu-toggle { display: block; }
+  .navbar nav { display: none; width: 100%; flex-direction: column; align-items: flex-start; gap: 14px; padding: 16px 0 6px; }
+  .navbar nav.open { display: flex; }
+}
