@@ -1,16 +1,4 @@
-<?php
-// 1. Connect to the database
-require_once 'config.php';
-
-// 2. Fetch the 6 newest destinations and join the categories table to get the category name
-$sql = "SELECT destinations.*, categories.name AS category_name 
-        FROM destinations 
-        LEFT JOIN categories ON destinations.category_id = categories.id 
-        LIMIT 6";
-$stmt = $pdo->query($sql);
-$destinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,24 +12,7 @@ $destinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
 
   <!-- NAVBAR -->
-  <header class="navbar">
-    <a href="index.php" class="logo">&#9650; Explore<span>Kosovo</span></a>
-    <nav>
-      <a href="index.php">Home</a>
-      <a href="destinations.php">Destinations</a>
-      <a href="about.html">About Us</a>
-      <a href="contact.html">Contact</a>
-      
-      <!-- Dynamic Login/Register vs Dashboard/Logout -->
-      <?php if(isset($_SESSION['user_id'])): ?>
-        <a href="dashboard.php">Dashboard</a>
-        <a href="logout.php" class="btn btn-gold">Logout</a>
-      <?php else: ?>
-        <a href="login.php">Login</a>
-        <a href="register.php" class="btn btn-gold">Register</a>
-      <?php endif; ?>
-    </nav>
-  </header>
+  <?php include "header.php"; ?>
 
   <!-- HERO -->
   <section class="hero">
@@ -64,13 +35,8 @@ $destinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </select>
     <select name="category">
       <option value="">All categories</option>
-      <!-- In a fully dynamic site, you would fetch these from the DB too -->
-      <option value="1">Mountains</option>
-      <option value="2">Waterfalls</option>
-      <option value="3">Historical Places</option>
-      <option value="4">Cities</option>
-      <option value="5">Nature</option>
-      <option value="6">Adventure</option>
+      <option>Mountains</option><option>Waterfalls</option><option>Historical Places</option>
+      <option>Cities</option><option>Nature</option><option>Adventure</option>
     </select>
     <button type="submit" class="btn btn-gold">Search</button>
   </form>
@@ -81,39 +47,83 @@ $destinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <p class="section-sub">Discover places that make every journey unforgettable.</p>
     <div class="cards">
 
-      <!-- DYNAMIC PHP LOOP -->
-      <?php if(count($destinations) > 0): ?>
-        <?php foreach($destinations as $dest): ?>
-          <article class="card">
-            <!-- Images are inside destinationimages/ folder -->
-            <img src="destinationimages/<?= htmlspecialchars($dest['image']) ?>" alt="<?= htmlspecialchars($dest['name']) ?>">
-            <div class="card-body">
-              <!-- Displays category from the JOIN, and rating -->
-              <span class="tag"><?= htmlspecialchars($dest['category_name'] ?? 'Uncategorized') ?> • <?= htmlspecialchars($dest['rating']) ?>★</span>
-              <h3><?= htmlspecialchars($dest['name']) ?></h3>
-              <p class="place"><?= htmlspecialchars($dest['city']) ?></p>
-              <p><?= htmlspecialchars($dest['description']) ?></p>
-              <!-- Dynamic link passes the ID: details.php?id=1 -->
-              <a href="details.php?id=<?= $dest['id'] ?>" class="btn btn-outline">View Details</a>
-            </div>
-          </article>
-        <?php endforeach; ?>
-      <?php else: ?>
-        <p>No destinations found. Please add some in the database!</p>
-      <?php endif; ?>
+      <article class="card">
+        <img src="destinationimages/rugova.jpg" alt="Rugova Mountains">
+        <div class="card-body">
+          <span class="tag">Mountains</span>
+          <h3>Rugova</h3>
+          <p class="place">Peja</p>
+          <p>Deep canyons, alpine peaks and some of the best hiking in the Balkans.</p>
+          <a href="destinations.php" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <img src="destinationimages/prizren.jpg" alt="Prizren Old Town">
+        <div class="card-body">
+          <span class="tag">Historical Places</span>
+          <h3>Prizren</h3>
+          <p class="place">Prizren</p>
+          <p>Ottoman bridges, the fortress above the town and the Lumbardhi river.</p>
+          <a href="destinations.php" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <img src="destinationimages/brezovica.jpg" alt="Brezovica">
+        <div class="card-body">
+          <span class="tag">Adventure</span>
+          <h3>Brezovica</h3>
+          <p class="place">Shtërpcë</p>
+          <p>Skiing in winter, mountain trails and fresh air in the Sharr Mountains.</p>
+          <a href="destinations.php" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <img src="destinationimages/mirusha.jpg" alt="Mirusha Waterfalls">
+        <div class="card-body">
+          <span class="tag">Waterfalls</span>
+          <h3>Mirusha Waterfalls</h3>
+          <p class="place">Malisheva</p>
+          <p>A chain of waterfalls and turquoise pools carved into the canyon.</p>
+          <a href="destinations.php" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <img src="destinationimages/gadime.jpg" alt="Gadime Cave">
+        <div class="card-body">
+          <span class="tag">Nature</span>
+          <h3>Gadime Cave</h3>
+          <p class="place">Lipjan</p>
+          <p>An underground world of stalactites and stalagmites near Prishtina.</p>
+          <a href="destinations.php" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <img src="destinationimages/germia.jpg" alt="Germia Park">
+        <div class="card-body">
+          <span class="tag">Nature</span>
+          <h3>Germia Park</h3>
+          <p class="place">Prishtina</p>
+          <p>Forest walks, picnic areas and a pool, only minutes from the capital.</p>
+          <a href="destinations.php" class="btn btn-outline">View Details</a>
+        </div>
+      </article>
 
     </div>
   </section>
 
-  <!-- CATEGORIES -->
+  <!-- CATEGORIES: each card uses an image as its background -->
   <section class="section alt">
     <h2>Explore by Category</h2>
     <p class="section-sub">Choose the kind of trip you want.</p>
     <div class="categories">
-      <!-- Keep your custom background images here, just update links -->
       <a href="destinations.php?category=Mountains" class="cat" style="background-image:url('destinationimages/rugova.jpg')">Mountains</a>
       <a href="destinations.php?category=Waterfalls" class="cat" style="background-image:url('destinationimages/mirusha.jpg')">Waterfalls</a>
-      <a href="destinations.php?category=Historical%20Places" class="cat" style="background-image:url('destinationimages/prizren.jpg')">Historical Places</a>
+      <a href="destinations.php?category=Historical Places" class="cat" style="background-image:url('destinationimages/prizren.jpg')">Historical Places</a>
       <a href="destinations.php?category=Cities" class="cat" style="background-image:url('destinationimages/germia.jpg')">Cities</a>
       <a href="destinations.php?category=Nature" class="cat" style="background-image:url('destinationimages/gadime.jpg')">Nature</a>
       <a href="destinations.php?category=Adventure" class="cat" style="background-image:url('destinationimages/brezovica.jpg')">Adventure</a>
@@ -152,9 +162,9 @@ $destinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <div>
       <h4>Destinations</h4>
-      <a href="details.php?id=1">Rugova</a>
-      <a href="details.php?id=2">Prizren</a>
-      <a href="details.php?id=3">Brezovica</a>
+      <a href="destinations.php">Rugova</a>
+      <a href="destinations.php">Prizren</a>
+      <a href="destinations.php">Brezovica</a>
     </div>
     <div>
       <h4>Contact</h4>

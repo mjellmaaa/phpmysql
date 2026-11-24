@@ -1,6 +1,4 @@
 <?php
-
-session_start();
 // Database connection details (XAMPP uses the user "root" with no password)
 $host = "localhost";
 $dbname = "explorekosovo";
