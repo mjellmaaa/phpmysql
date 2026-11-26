@@ -1,4 +1,16 @@
-<?php session_start(); ?>
+<?php
+session_start();
+include "config.php";
+
+// Get 6 real places to stay to show on the homepage
+$stays = $pdo->query(
+    "SELECT stays.*, destinations.name AS destination_name
+     FROM stays
+     JOIN destinations ON stays.destination_id = destinations.id
+     ORDER BY stays.id ASC
+     LIMIT 6"
+)->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +33,7 @@
       <h1>Discover <span>Kosovo.</span></h1>
       <p class="hero-text">From breathtaking mountains to historic cities, discover places worth remembering.</p>
       <a href="destinations.php" class="btn btn-gold">Explore Destinations</a>
-      <a href="#featured" class="btn btn-glass">Discover More</a>
+      <a href="booking.php" class="btn btn-glass">Book Stays</a>
     </div>
   </section>
 
@@ -54,7 +66,8 @@
           <h3>Rugova</h3>
           <p class="place">Peja</p>
           <p>Deep canyons, alpine peaks and some of the best hiking in the Balkans.</p>
-          <a href="destinations.php" class="btn btn-outline">View Details</a>
+          <a href="details.php?id=1" class="btn btn-outline">View Details</a>
+          <a href="booking.php?destination_id=1" class="btn btn-outline">Book Stay</a>
         </div>
       </article>
 
@@ -65,7 +78,8 @@
           <h3>Prizren</h3>
           <p class="place">Prizren</p>
           <p>Ottoman bridges, the fortress above the town and the Lumbardhi river.</p>
-          <a href="destinations.php" class="btn btn-outline">View Details</a>
+          <a href="details.php?id=2" class="btn btn-outline">View Details</a>
+          <a href="booking.php?destination_id=2" class="btn btn-outline">Book Stay</a>
         </div>
       </article>
 
@@ -76,7 +90,8 @@
           <h3>Brezovica</h3>
           <p class="place">Shtërpcë</p>
           <p>Skiing in winter, mountain trails and fresh air in the Sharr Mountains.</p>
-          <a href="destinations.php" class="btn btn-outline">View Details</a>
+          <a href="details.php?id=3" class="btn btn-outline">View Details</a>
+          <a href="booking.php?destination_id=3" class="btn btn-outline">Book Stay</a>
         </div>
       </article>
 
@@ -87,7 +102,8 @@
           <h3>Mirusha Waterfalls</h3>
           <p class="place">Malisheva</p>
           <p>A chain of waterfalls and turquoise pools carved into the canyon.</p>
-          <a href="destinations.php" class="btn btn-outline">View Details</a>
+          <a href="details.php?id=4" class="btn btn-outline">View Details</a>
+          <a href="booking.php?destination_id=4" class="btn btn-outline">Book Stay</a>
         </div>
       </article>
 
@@ -98,7 +114,8 @@
           <h3>Gadime Cave</h3>
           <p class="place">Lipjan</p>
           <p>An underground world of stalactites and stalagmites near Prishtina.</p>
-          <a href="destinations.php" class="btn btn-outline">View Details</a>
+          <a href="details.php?id=5" class="btn btn-outline">View Details</a>
+          <a href="booking.php?destination_id=5" class="btn btn-outline">Book Stay</a>
         </div>
       </article>
 
@@ -109,15 +126,39 @@
           <h3>Germia Park</h3>
           <p class="place">Prishtina</p>
           <p>Forest walks, picnic areas and a pool, only minutes from the capital.</p>
-          <a href="destinations.php" class="btn btn-outline">View Details</a>
+          <a href="details.php?id=6" class="btn btn-outline">View Details</a>
+          <a href="booking.php?destination_id=6" class="btn btn-outline">Book Stay</a>
         </div>
       </article>
 
     </div>
   </section>
 
+  <!-- BOOKING: REAL VILLAS & HOTELS -->
+  <section class="section alt" id="booking">
+    <h2>Places &amp; Villas to Stay</h2>
+    <p class="section-sub">Real hotels, mountain villas, and guesthouses where you can book online.</p>
+    <div class="cards">
+      <?php foreach ($stays as $s) { ?>
+        <article class="card">
+          <div class="card-body">
+            <span class="tag"><?php echo htmlspecialchars($s['type']); ?></span>
+            <h3><?php echo htmlspecialchars($s['name']); ?></h3>
+            <p class="place">
+              Near <?php echo htmlspecialchars($s['destination_name']); ?>
+              &middot; &euro;<?php echo $s['price']; ?>/night
+            </p>
+            <p><?php echo htmlspecialchars($s['location']); ?></p>
+            <a href="<?php echo htmlspecialchars($s['booking_url']); ?>" target="_blank" class="btn btn-outline">Book on Booking.com</a>
+          </div>
+        </article>
+      <?php } ?>
+    </div>
+    <p class="results"><a href="booking.php" class="btn btn-gold">View All Booking Places</a></p>
+  </section>
+
   <!-- CATEGORIES: each card uses an image as its background -->
-  <section class="section alt">
+  <section class="section">
     <h2>Explore by Category</h2>
     <p class="section-sub">Choose the kind of trip you want.</p>
     <div class="categories">
@@ -131,7 +172,7 @@
   </section>
 
   <!-- WHY KOSOVO -->
-  <section class="section">
+  <section class="section alt">
     <h2>Why Explore Kosovo?</h2>
     <div class="why">
       <div><h3>Incredible landscapes</h3><p>Alpine peaks, canyons and rivers within a few hours of each other.</p></div>
@@ -144,8 +185,8 @@
   <!-- CALL TO ACTION -->
   <section class="cta">
     <h2>Your Next Adventure Starts Here.</h2>
-    <p>Discover new places, create unforgettable memories and experience Kosovo.</p>
-    <a href="destinations.php" class="btn btn-gold">Start Exploring</a>
+    <p>Discover new places, create unforgettable memories and book your stay in Kosovo.</p>
+    <a href="booking.php" class="btn btn-gold">Browse All Stays</a>
   </section>
 
   <!-- FOOTER -->
@@ -158,13 +199,14 @@
       <h4>Quick links</h4>
       <a href="index.php">Home</a>
       <a href="destinations.php">Destinations</a>
+      <a href="booking.php">Booking</a>
       <a href="login.php">Login</a>
     </div>
     <div>
       <h4>Destinations</h4>
-      <a href="destinations.php">Rugova</a>
-      <a href="destinations.php">Prizren</a>
-      <a href="destinations.php">Brezovica</a>
+      <a href="details.php?id=1">Rugova</a>
+      <a href="details.php?id=2">Prizren</a>
+      <a href="details.php?id=3">Brezovica</a>
     </div>
     <div>
       <h4>Contact</h4>

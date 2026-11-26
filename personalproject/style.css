@@ -10,7 +10,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }   /* smooth scrolling for #links */
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
@@ -39,7 +39,7 @@ a { color: inherit; text-decoration: none; }
 .btn-outline { border-color: var(--gold); color: var(--gold); padding: 8px 18px; margin-top: 14px; }
 .btn-outline:hover { background: var(--gold); color: var(--bg); }
 
-/* NAVBAR: sits on top of the hero with a slightly transparent dark background */
+/* NAVBAR */
 .navbar {
   position: fixed;
   top: 0; left: 0; width: 100%;
@@ -58,7 +58,7 @@ a { color: inherit; text-decoration: none; }
 .navbar nav a:not(.btn):hover { color: var(--gold); }
 .navbar .btn { padding: 8px 20px; }
 
-/* HERO: dark gradient over the photo keeps the text readable */
+/* HERO */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -74,7 +74,7 @@ a { color: inherit; text-decoration: none; }
 .hero h1 span { color: var(--gold); }
 .hero-text { color: var(--soft); font-size: 19px; margin-bottom: 32px; }
 
-/* SEARCH: pulled up so it overlaps the bottom of the hero */
+/* SEARCH */
 .search {
   display: flex;
   gap: 12px;
@@ -106,7 +106,7 @@ a { color: inherit; text-decoration: none; }
 .section h2 { font-size: 40px; text-align: center; }
 .section-sub { color: var(--soft); text-align: center; margin: 8px 0 50px; }
 
-/* DESTINATION CARDS: grid with 3 columns */
+/* DESTINATION CARDS */
 .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
 .card {
   background: var(--card);
@@ -178,14 +178,12 @@ a { color: inherit; text-decoration: none; }
 .footer .logo { color: var(--text); display: block; }
 .copy { grid-column: 1 / -1; text-align: center; border-top: 1px solid var(--border); padding-top: 24px; }
 
-/* RESPONSIVE: tablets */
 @media (max-width: 1000px) {
   .cards, .categories { grid-template-columns: repeat(2, 1fr); }
   .why { grid-template-columns: repeat(2, 1fr); }
   .footer { grid-template-columns: 1fr 1fr; }
 }
 
-/* RESPONSIVE: phones */
 @media (max-width: 650px) {
   .navbar { padding: 12px 20px; flex-direction: column; gap: 8px; }
   .navbar nav { gap: 14px; flex-wrap: wrap; justify-content: center; font-size: 14px; }
@@ -197,7 +195,7 @@ a { color: inherit; text-decoration: none; }
   .cards, .categories, .why, .footer { grid-template-columns: 1fr; }
 }
 
-/* ===== DESTINATIONS PAGE ===== */
+/* DESTINATIONS PAGE */
 .page-head {
   text-align: center;
   padding: 150px 20px 40px;
@@ -206,10 +204,9 @@ a { color: inherit; text-decoration: none; }
 .page-head h1 { font-size: 52px; }
 .page-head p { color: var(--soft); margin-top: 10px; }
 
-/* Filter bar: same idea as the homepage search, with 5 fields */
 .filters {
   display: flex;
-  flex-wrap: wrap;            /* fields move to a new row when space runs out */
+  flex-wrap: wrap;
   gap: 12px;
   max-width: 1180px;
   margin: 0 auto;
@@ -229,7 +226,7 @@ a { color: inherit; text-decoration: none; }
 .filters input:focus, .filters select:focus { outline: none; border-color: var(--gold); }
 .list { padding-top: 40px; }
 
-/* ===== LOGIN AND REGISTER ===== */
+/* LOGIN AND REGISTER */
 .auth-page {
   background:
     linear-gradient(rgba(16,21,19,0.75), rgba(16,21,19,0.9)),
@@ -282,7 +279,7 @@ a { color: inherit; text-decoration: none; }
   .auth-box { padding: 30px 22px; }
 }
 
-/* ===== DETAILS PAGE ===== */
+/* DETAILS PAGE */
 .detail-hero {
   height: 70vh;
   min-height: 420px;
@@ -294,28 +291,50 @@ a { color: inherit; text-decoration: none; }
 }
 .detail-title h1 { font-size: 64px; margin: 12px 0 6px; }
 .detail-title p { color: var(--gold); font-size: 18px; }
-.detail-body { max-width: 800px; margin: 0 auto; padding: 70px 30px; }
+.detail-body { max-width: 960px; margin: 0 auto; padding: 70px 30px; }
 .detail-body h2 { font-size: 32px; margin-bottom: 16px; }
 .detail-body p { color: var(--soft); font-size: 18px; margin-bottom: 30px; }
+
+/* REAL STAYS & VILLAS NEAR EACH DESTINATION */
+.stays-section { margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--border); }
+.stays-section .stays-sub { color: var(--soft); font-size: 15px; margin-bottom: 24px; }
+.stays-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.stay-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.stay-card h3 { font-size: 20px; margin-bottom: 6px; color: var(--text); }
+.stay-card .stay-loc { font-size: 14px; color: var(--soft); margin-bottom: 10px; }
+.stay-card .stay-price { font-size: 15px; color: var(--gold); font-weight: 600; margin-bottom: 14px; }
+.stay-card .stay-btn { padding: 9px 14px; font-size: 14px; text-align: center; }
+
+@media (max-width: 850px) {
+  .stays-grid { grid-template-columns: 1fr; }
+}
 
 @media (max-width: 650px) {
   .detail-hero { padding: 0 20px 30px; }
   .detail-title h1 { font-size: 42px; }
 }
 
-/* ===== FORM MESSAGES ===== */
+/* FORM MESSAGES */
 .msg { padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; font-size: 14px; }
 .msg-error { background: rgba(200,70,70,0.15); border: 1px solid #c84646; color: #f0b4b4; }
 .msg-ok { background: rgba(212,168,93,0.15); border: 1px solid var(--gold); color: var(--gold); }
 
-/* ===== DASHBOARD ===== */
+/* DASHBOARD */
 .dash { max-width: 1000px; margin: 0 auto; padding: 40px 30px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .dash-box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
 .dash-box h3 { color: var(--gold); margin-bottom: 14px; }
 .dash-box p { color: var(--soft); margin-bottom: 8px; }
 .dash-box .btn { margin: 10px 10px 0 0; }
 
-/* ===== ADMIN ===== */
+/* ADMIN */
 .admin { max-width: 1100px; margin: 0 auto; padding: 30px 30px 80px; }
 .admin table { width: 100%; border-collapse: collapse; margin-top: 24px; }
 .admin th, .admin td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
@@ -328,7 +347,6 @@ a { color: inherit; text-decoration: none; }
 }
 .admin-form input[type="submit"] { background: var(--gold); color: var(--bg); font-weight: 600; border: none; cursor: pointer; }
 
-/* ===== BUTTONS INSIDE FORMS (Save, Remove, Delete) ===== */
 button.btn-outline { background: none; cursor: pointer; font-family: inherit; font-size: 15px; margin-left: 8px; }
 button.btn-outline:hover { background: var(--gold); color: var(--bg); }
 .admin button.btn-outline { margin-left: 0; }
@@ -339,11 +357,10 @@ button.btn-outline:hover { background: var(--gold); color: var(--bg); }
   .admin { padding: 20px; }
   .admin table { font-size: 13px; }
 }
-/* ===== SEARCH RESULTS INFO ===== */
+
 .results { text-align: center; color: var(--soft); margin: 10px 0 0; font-size: 14px; }
 .results a { color: var(--gold); }
 
-/* ===== MOBILE MENU ===== */
 .menu-toggle { display: none; background: none; border: 1px solid var(--border); color: var(--text); font-size: 24px; padding: 2px 12px; border-radius: 8px; cursor: pointer; }
 @media (max-width: 650px) {
   .navbar { flex-direction: row; flex-wrap: wrap; }

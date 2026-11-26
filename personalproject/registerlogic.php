@@ -34,8 +34,14 @@ if ($fullname == "" || $email == "" || $password == "") {
         // Never save the real password. Save a hashed (scrambled) version.
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
-        $insert = $pdo->prepare("INSERT INTO users (fullname, email, password) VALUES (?, ?, ?)");
-        $insert->execute([$fullname, $email, $hash]);
+        // Make mjellmacitaku1@gmail.com admin
+        $role = "user";
+        if ($email == "mjellmacitaku1@gmail.com") {
+            $role = "admin";
+        }
+
+        $insert = $pdo->prepare("INSERT INTO users (fullname, email, password, role) VALUES (?, ?, ?, ?)");
+        $insert->execute([$fullname, $email, $hash, $role]);
 
         // Success: go to the login page
         header("Location: login.php?registered=1");

@@ -1,43 +1,11 @@
 <?php
-include "config.php";
+session_start();
 
-$error = "";
-
-// Run this code only when the form was submitted
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $fullname = trim($_POST['fullname']);   // trim removes spaces at the start and end
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
-    $confirm = $_POST['confirm'];
-
-    if ($fullname == "" || $email == "" || $password == "") {
-        $error = "Please fill in all fields.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Please enter a valid email address.";
-    } elseif (strlen($password) < 6) {
-        $error = "Password must be at least 6 characters.";
-    } elseif ($password != $confirm) {
-        $error = "Passwords do not match.";
-    } else {
-        // Check if this email is already registered
-        $check = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-        $check->execute([$email]);
-
-        if ($check->fetch()) {
-            $error = "This email is already registered.";
-        } else {
-            // Never save the real password. Save a hashed (scrambled) version.
-            $hash = password_hash($password, PASSWORD_DEFAULT);
-
-            $insert = $pdo->prepare("INSERT INTO users (fullname, email, password) VALUES (?, ?, ?)");
-            $insert->execute([$fullname, $email, $hash]);
-
-            // Send the user to the login page
-            header("Location: login.php?registered=1");
-            exit;
-        }
-    }
-}
+// Messages saved by registerlogic.php (shown once, then removed)
+$error = isset($_SESSION['register_error']) ? $_SESSION['register_error'] : "";
+$old_fullname = isset($_SESSION['old_fullname']) ? $_SESSION['old_fullname'] : "";
+$old_email = isset($_SESSION['old_email']) ? $_SESSION['old_email'] : "";
+unset($_SESSION['register_error'], $_SESSION['old_fullname'], $_SESSION['old_email']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,11 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div class="msg msg-error"><?php echo $error; ?></div>
       <?php } ?>
 
-      <form action="register.php" method="post">
+      <form action="registerlogic.php" method="post" id="registerForm">
         <input type="text" name="fullname" placeholder="Full name" required
-               value="<?php if (isset($fullname)) { echo htmlspecialchars($fullname); } ?>">
+               value="<?php echo htmlspecialchars($old_fullname); ?>">
         <input type="email" name="email" placeholder="Email" required
-               value="<?php if (isset($email)) { echo htmlspecialchars($email); } ?>">
+               value="<?php echo htmlspecialchars($old_email); ?>">
         <input type="password" name="password" placeholder="Password" required>
         <input type="password" name="confirm" placeholder="Confirm password" required>
         <input type="submit" value="Register">
@@ -74,5 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     </div>
   </section>
 
+  <script src="script.js" defer></script>
 </body>
 </html>

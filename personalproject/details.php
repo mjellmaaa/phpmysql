@@ -30,6 +30,12 @@ $sql2 = "SELECT * FROM destinations
 $query2 = $pdo->prepare($sql2);
 $query2->execute([$d['category_id'], $d['id']]);
 $related = $query2->fetchAll(PDO::FETCH_ASSOC);
+
+// Get real places to stay for this destination
+$sql3 = "SELECT * FROM stays WHERE destination_id = ?";
+$query3 = $pdo->prepare($sql3);
+$query3->execute([$d['id']]);
+$stays = $query3->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,6 +71,26 @@ $related = $query2->fetchAll(PDO::FETCH_ASSOC);
       <button type="submit" class="btn btn-outline">&#9825; Save</button>
     </form>
   </section>
+
+  <!-- PLACES TO STAY NEARBY -->
+  <?php if (count($stays) > 0) { ?>
+  <section class="section">
+    <h2>Places to Stay Nearby</h2>
+    <p class="section-sub">Real villas and hotels where you can book and stay.</p>
+    <div class="cards">
+      <?php foreach ($stays as $s) { ?>
+        <article class="card">
+          <div class="card-body">
+            <span class="tag"><?php echo htmlspecialchars($s['type']); ?></span>
+            <h3><?php echo htmlspecialchars($s['name']); ?></h3>
+            <p class="place"><?php echo htmlspecialchars($s['location']); ?> &middot; &euro;<?php echo $s['price']; ?>/night</p>
+            <a href="<?php echo htmlspecialchars($s['booking_url']); ?>" target="_blank" class="btn btn-outline">Book Now</a>
+          </div>
+        </article>
+      <?php } ?>
+    </div>
+  </section>
+  <?php } ?>
 
   <!-- RELATED DESTINATIONS -->
   <?php if (count($related) > 0) { ?>

@@ -1,32 +1,9 @@
 <?php
-// Sessions must be started before using $_SESSION
 session_start();
-include "config.php";
 
-$error = "";
-
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
-
-    // Find the user with this email
-    $query = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-    $query->execute([$email]);
-    $user = $query->fetch(PDO::FETCH_ASSOC);
-
-    // password_verify compares the typed password with the saved hash
-    if ($user && password_verify($password, $user['password'])) {
-        // Save the user's info in the session (it stays while they browse)
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['fullname'] = $user['fullname'];
-        $_SESSION['role'] = $user['role'];
-
-        header("Location: destinations.php");
-        exit;
-    } else {
-        $error = "Wrong email or password.";
-    }
-}
+// Message saved by loginlogic.php (shown once, then removed)
+$error = isset($_SESSION['login_error']) ? $_SESSION['login_error'] : "";
+unset($_SESSION['login_error']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div class="msg msg-error"><?php echo $error; ?></div>
       <?php } ?>
 
-      <form action="login.php" method="post">
+      <form action="loginlogic.php" method="post">
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
         <input type="submit" value="Login">

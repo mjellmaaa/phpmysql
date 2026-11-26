@@ -7,35 +7,14 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
     exit;
 }
 
-$error = "";
+// Error message saved by update.php (shown once, then removed)
+$error = isset($_SESSION['edit_error']) ? $_SESSION['edit_error'] : "";
+unset($_SESSION['edit_error']);
+
 $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
 
-// UPDATE: runs when the form is submitted
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $id = $_POST['id'];
-    $name = trim($_POST['name']);
-    $city = trim($_POST['city']);
-    $category_id = $_POST['category_id'];
-    $description = trim($_POST['description']);
-    $image = trim($_POST['image']);
-    $status = $_POST['status'];
-
-    if ($name == "" || $city == "" || $image == "") {
-        $error = "Name, city and image are required.";
-    } else {
-        $sql = "UPDATE destinations
-                SET name = ?, city = ?, category_id = ?, description = ?, image = ?, status = ?
-                WHERE id = ?";
-        $pdo->prepare($sql)->execute([$name, $city, $category_id, $description, $image, $status, $id]);
-
-        header("Location: admin.php");
-        exit;
-    }
-} else {
-    $id = isset($_GET['id']) ? $_GET['id'] : 0;
-}
-
 // READ the destination so the form is filled in
+$id = isset($_GET['id']) ? $_GET['id'] : 0;
 $query = $pdo->prepare("SELECT * FROM destinations WHERE id = ?");
 $query->execute([$id]);
 $d = $query->fetch(PDO::FETCH_ASSOC);
@@ -63,7 +42,7 @@ if (!$d) {
   <section class="admin">
     <?php if ($error != "") { ?><div class="msg msg-error"><?php echo $error; ?></div><?php } ?>
 
-    <form action="edit.php" method="post" class="admin-form">
+    <form action="update.php" method="post" class="admin-form">
       <input type="hidden" name="id" value="<?php echo $d['id']; ?>">
       <input type="text" name="name" value="<?php echo htmlspecialchars($d['name']); ?>" required>
       <input type="text" name="city" value="<?php echo htmlspecialchars($d['city']); ?>" required>

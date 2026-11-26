@@ -5,6 +5,7 @@
   <nav>
     <a href="index.php">Home</a>
     <a href="destinations.php">Destinations</a>
+    <a href="booking.php">Booking</a>
 
     <?php if (isset($_SESSION['user_id'])) { ?>
       <!-- Shown when the user IS logged in -->
